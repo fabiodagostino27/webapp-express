@@ -6,7 +6,14 @@ function index(req, res) {
     connection.query(sql, (err, results) => {
         if (err) return res.status(500).json({error: "Database error"});
 
-        res.json(results);
+        const movies = results.map(m => {
+            return {
+                ...m,
+                image: req.imagePath + m.image
+            }
+        });
+
+        res.json(movies);
     });
 };
 
@@ -24,7 +31,10 @@ function show(req, res) {
             if (err) return res.status(500).json({error: "Database error"});
     
             movie.reviews = reviewsResults;
-            res.json(movie);
+            res.json({
+                ...movie,
+                image: req.imagePath + movie.image
+            });
         });
     });
 }
