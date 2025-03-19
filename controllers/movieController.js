@@ -37,10 +37,26 @@ function show(req, res) {
             });
         });
     });
+};
+
+function storeReview(res, req) {
+    const {id} = req.params;
+    const {name, vote, text} = req.body;
+    const sql = `INSERT INTO reviews (name, vote, text, movie_id) VALUES (?,?,?,?)`
+
+    connection.query(sql, [name, vote, text, id], (err, results) => {
+        if (err) return res.status(500).json({error: "Database error"});
+
+        res.status(201).json({
+            message: "Reviews added",
+            id: results.insertId
+        })
+    })
 }
 
 export {
     index,
-    show
+    show,
+    storeReview
 }
 
