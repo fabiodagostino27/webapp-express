@@ -39,7 +39,7 @@ function show(req, res) {
     });
 };
 
-function storeReview(res, req) {
+function storeReview(req, res) {
     const {id} = req.params;
     const {name, vote, text} = req.body;
     const sql = `INSERT INTO reviews (name, vote, text, movie_id) VALUES (?,?,?,?)`
@@ -48,15 +48,30 @@ function storeReview(res, req) {
         if (err) return res.status(500).json({error: "Database error"});
 
         res.status(201).json({
-            message: "Reviews added",
+            message: "Review added",
             id: results.insertId
         })
+    })
+};
+
+function store(req, res) {
+    const {title, director, genre, release_year, abstract} = req.body;
+    const sql = `INSERT INTO movies (title, director, genre, release_year, abstract) VALUES (?,?,?,?,?)`;
+
+    connection.query(sql, [title, director, genre, release_year, abstract], (err, results) => {
+        if (err) return res.status(500).json({error: "Database error"});
+
+        res.status(201).json({
+            message: "Movie added",
+            id: results.insertId
+        });
     })
 }
 
 export {
     index,
     show,
-    storeReview
+    storeReview,
+    store
 }
 
